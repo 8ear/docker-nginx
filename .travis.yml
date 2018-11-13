@@ -1,0 +1,23 @@
+#!/bin/bash
+sudo: required
+services: docker
+
+env:
+  global:
+  # Docker Username only valid for this repo
+  - secure: "hTjeYxqSoiQI8Et7aAhelX+WHT4xvav80CGWRVmq4og0QP2K0YqNX/YZoUa3nbvgGGd2amntysZL/Pih90TZUduYAQzn/ZGTKcyZ9SMUtE/vlEH2m0C5DIt0+rFMgCqJ5Em2G1y0OIB0w7UPJoDGWRPekoT4O6AvGX2abd5Bg89FUcRNC90sbrTpJ46x5TNDyx/lVxVxgO+PXyvuFOArOIuzxBiO0cBgUpuaR2ydfYmzgvQNf3UhdH4krix0LqWU2OyDz+uMM7XnstnvIKE5m9qddGYZ44p1wQzKYDBGQwxUKBz8JQpKbTYPUKR1ziKRjOlQdzH+FVwS7oO9U25T29E18YF9Mc/hsHeloNkyaK6JNYB0mTPj66vCDuje4uogxK4wRgYNznSbKauNJNY/l+JJmksZmKATJUCt9ZLWDG+v+wQZbt3mh45SamwS+Iv+im0e60peGoZLzlN7ayoVWTfKjxj9JQEcE3b0XKI2IsSOXD9dzdUE3o7G0Sf8UEqwuBoV1HNB0cP2O9EklSljB5rNxU0ko1xW7L0b6oq+Skv+QqYZX5DTB7sARUI5QJRsE1rNwdP44HDM10sNmJEO8GlPSXhx3dtLGeDXUgU/pLZMNVIPejshA1poBsUdjt7rjYYnRnBYaxLsiGimeWAnGus0Tf0GNOpqUp8l+b2p6RI="
+  # Docker Password only valid for this repo
+  - secure: "fcBnTtSVTE369veSqmmr7X9BVCVAQ6sdtQmaQ/ERBWsX4USaKzSPPdU3V8U4JUcsELwzRjvw/Wy5WCXTSUzR/DGhyVdYsU4tK6SbnqyDHpKyb/MVwE/81n3grMMLzoEqDqPXZqZNUQ75MjLsGD1xxaKeO/AEGPVGpRI7zmLTQc5PVHL5wIVkc+jJe3yPwy/qCcUcz+OcbLt4tu9CKbq+Zw3jxbKB/n4kURRDwTXuOdJ2pFGkdnpWZKvVIOuBIJ3f7Frqa1JHJCZUIbq8b3q5TkXvfODGHcvFERpeD5WzsdYOP+mdJGhEhKd4E7hVxz9ElENXY0B1gZ5r6w2I4TgQo6P9K9SUqHLv4opd+r28hCBodhgj6AzHkvK5YMx2LM1+jQVPami7suDEbM6MW1vStqGlXsvMeuIOxrh0AhrQCFLqFipJdNtV3wA+Jq2zdLZLsIVNeOPcWue9g3tNSSnz7s9Uv/NvzoAnew8/oqfB4HcOMkSDDk8fh7BXv3jFiHs2wRb2WJPqRvHsq4TGQxlqCTWUiHnu+qQMqUCaJsFmwfjih/8ZIr32UWfGaLohBQRFKKzjdzAgiDtYzFtkmkBkCeyBvPoeKD4hiyVycAMzc9hhloSQKGOwB6lj5nIwb5QeaTcaBED+f/Al18lsp+ufG1food9C5hr1uwa3X6Ecfsk="
+  matrix:
+  - VERSION=0.3.4
+
+before_install:
+  - make init
+  - make update
+
+script:
+  - make build
+
+after_success:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin;
+  - make push
